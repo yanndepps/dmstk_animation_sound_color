@@ -1,0 +1,16 @@
+{
+  "name": "dmstk_animation_sound_color",
+  "version": "1.0.0",
+  "description": "* About ** Intro to Creative Coding : Animation, Sound & Color + A course by Bruno Imbrizi, hosted at domestika.org",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "canvas-sketch": "^0.7.6",
+    "p5": "^1.5.0"
+  }
+}
