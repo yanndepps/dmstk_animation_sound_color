@@ -5,14 +5,14 @@
 const canvasSketch = require('canvas-sketch');
 
 const settings = {
-  dimensions: [1080, 1080],
-  animate: true,
-  context: '2d'
+	dimensions: [1080, 1080],
+	animate: true,
+	context: '2d'
 };
 
 const sketch = () => {
 	let x, y, w, h;
-  return ({ context, width, height }) => {
+	return ({ context, width, height }) => {
 		context.fillStyle = 'white';
 		context.fillRect(0, 0, width, height);
 
@@ -36,7 +36,7 @@ const sketch = () => {
 		context.closePath();
 		context.stroke();
 		context.restore();
-  };
+	};
 };
 
 canvasSketch(sketch, settings);
