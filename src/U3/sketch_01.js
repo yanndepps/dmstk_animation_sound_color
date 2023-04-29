@@ -23,14 +23,16 @@ const sketch = () => {
 
 		context.save();
 		context.translate(x, y);
+		context.translate(w * -0.5, h * -0.5);
 		context.strokeStyle = 'black';
 		// context.strokeRect(w * -0.5, h * -0.5, w, h);
+
 		// draw the rect point by point
 		context.beginPath();
-		context.moveTo(w * -0.5, h * -0.5);
-		context.lineTo(w * 0.5, h * -0.5);
-		context.lineTo(w * 0.5, h * 0.5);
-		context.lineTo(w * -0.5, h * 0.5);
+		context.moveTo(0, 0);
+		context.lineTo(w, 0);
+		context.lineTo(w, h);
+		context.lineTo(0, h);
 		context.closePath();
 		context.stroke();
 		context.restore();
