@@ -16,8 +16,8 @@ const settings = {
 };
 
 const sketch = ({ context, width, height }) => {
-	let x, y, w, h, fill, stroke;
-	const num = 20;
+	let x, y, w, h, fill, stroke, blend;
+	const num = 40; // 40
 	const degrees = -30;
 
 	const rects = [];
@@ -25,7 +25,7 @@ const sketch = ({ context, width, height }) => {
 	const rectColors = [
 		random.pick(risoColors),
 		random.pick(risoColors),
-		random.pick(risoColors),
+		// random.pick(risoColors),
 	];
 
 	// pick from the entire color set for the bg
@@ -34,13 +34,17 @@ const sketch = ({ context, width, height }) => {
 	for (let i = 0; i < num; i++) {
 		x = random.range(0, width);
 		y = random.range(0, height);
-		w = random.range(200, 600);
-		h = random.range(40, 200);
+		w = random.range(600, width);
+		h = random.range(20, 200); // (40, 200)
 
 		fill = random.pick(rectColors).hex;
 		stroke = random.pick(rectColors).hex;
+		// console.log('fill -> ', fill);
 
-		rects.push({ x, y, w, h, fill, stroke });
+		// random blend modes
+		blend = (random.value() > 0.5) ? 'overlay' : 'source-over';
+
+		rects.push({ x, y, w, h, fill, stroke, blend });
 	}
 
 	return ({ context, width, height }) => {
@@ -48,7 +52,7 @@ const sketch = ({ context, width, height }) => {
 		context.fillRect(0, 0, width, height);
 
 		rects.forEach(rect => {
-			const { x, y, w, h, fill, stroke } = rect;
+			const { x, y, w, h, fill, stroke, blend } = rect;
 			let shadowColor;
 
 			context.save();
@@ -56,6 +60,9 @@ const sketch = ({ context, width, height }) => {
 			context.strokeStyle = stroke;
 			context.fillStyle = fill;
 			context.lineWidth = 10;
+
+			// blend mode on
+			context.globalCompositeOperation = blend;
 
 			drawSkewedRect({ context, w, h, degrees });
 
@@ -75,6 +82,9 @@ const sketch = ({ context, width, height }) => {
 			// no shadow for strokes
 			context.shadowColor = null;
 			context.stroke();
+
+			// blend mode off
+			context.globalCompositeOperation = 'source-over';
 
 			// thin outlines around shapes
 			context.lineWidth = 2;
