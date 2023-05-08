@@ -28,6 +28,11 @@ const sketch = ({ context, width, height }) => {
 		// random.pick(risoColors),
 	];
 
+	// log our rect colors
+	rectColors.forEach((n, i) => {
+		console.log(`rect color ${i} -> `, n.name + " " + n.hex);
+	});
+
 	// pick from the entire color set for the bg
 	const bgColor = random.pick(risoColors).hex;
 
@@ -39,7 +44,6 @@ const sketch = ({ context, width, height }) => {
 
 		fill = random.pick(rectColors).hex;
 		stroke = random.pick(rectColors).hex;
-		// console.log('fill -> ', fill);
 
 		// random blend modes
 		blend = (random.value() > 0.5) ? 'overlay' : 'source-over';
