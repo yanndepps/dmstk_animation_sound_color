@@ -1,6 +1,6 @@
 /*
- * U3 -> sketch_01 : Skewing
- * Drawing a Rectangle
+ * U3 -> sketch_02 : Skewing
+ * Drawing a Skewed Rectangle
 */
 
 const canvasSketch = require('canvas-sketch');
@@ -26,7 +26,6 @@ const sketch = () => {
 		context.translate(x, y);
 		context.translate(w * -0.5, h * -0.5);
 		context.strokeStyle = 'black';
-		// context.strokeRect(w * -0.5, h * -0.5, w, h);
 
 		// draw the rect point by point
 		context.beginPath();
