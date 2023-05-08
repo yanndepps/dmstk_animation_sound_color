@@ -1,6 +1,7 @@
 /*
  * U3 -> sketch_06 : Skewing
  * Random Seed
+ * TODO: sketch_07 -> animate inner shapes
 */
 
 const canvasSketch = require('canvas-sketch');
@@ -9,13 +10,24 @@ const random = require('canvas-sketch-util/random');
 const Color = require('canvas-sketch-util/color');
 const risoColors = require('riso-colors');
 
+// set a seed
+const seed = random.getRandomSeed();
+
+// paste here the seed to recreate a sketch
+// const seed = '571653';
+// const seed = '107338';
+
 const settings = {
 	dimensions: [1080, 1080],
 	animate: false,
-	context: '2d'
+	context: '2d',
+	name: seed,
 };
 
 const sketch = ({ context, width, height }) => {
+	// seed
+	random.setSeed(seed);
+
 	let x, y, w, h, fill, stroke, blend;
 	const num = 20; // 40
 	const degrees = -30;
@@ -27,7 +39,7 @@ const sketch = ({ context, width, height }) => {
 		random.pick(risoColors),
 	];
 
-	// log our rect colors
+	// log our colors
 	rectColors.forEach((n, i) => {
 		console.log(`color ${i} -> `, n.name + " " + n.hex);
 	});
@@ -87,6 +99,7 @@ const sketch = ({ context, width, height }) => {
 			context.globalCompositeOperation = blend;
 
 			drawSkewedRect({ context, w, h, degrees });
+			// drawPolygon({ context, radius: mask.radius, sides: mask.sides });
 
 			// convert to HSL and bring a darker version of our
 			// picked color
