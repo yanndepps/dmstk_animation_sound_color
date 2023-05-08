@@ -17,7 +17,7 @@ const settings = {
 
 const sketch = ({ context, width, height }) => {
 	let x, y, w, h, fill, stroke, blend;
-	const num = 40; // 40
+	const num = 20; // 40
 	const degrees = -30;
 
 	const rects = [];
@@ -38,7 +38,7 @@ const sketch = ({ context, width, height }) => {
 	// mask
 	const mask = {
 		radius: width * 0.4,
-		sides: 6,
+		sides: 80,
 		x: width * 0.5,
 		y: height * 0.5,
 	};
@@ -121,9 +121,9 @@ const sketch = ({ context, width, height }) => {
 		// polygon outline
 		context.save();
 		context.translate(mask.x, mask.y);
-		context.lineWidth = 20;
+		context.lineWidth = 80; // 20
 
-		drawPolygon({ context, radius: mask.radius - context.lineWidth, sides: mask.sides });
+		drawPolygon({ context, radius: mask.radius - (context.lineWidth * 0.85), sides: mask.sides });
 
 		context.globalCompositeOperation = 'color-burn';
 		// context.strokeStyle = 'black';
