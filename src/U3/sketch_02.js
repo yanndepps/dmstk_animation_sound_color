@@ -14,7 +14,6 @@ const settings = {
 
 const sketch = () => {
 	let x, y, w, h;
-	let rx, ry, angle;
 	return ({ context, width, height }) => {
 		context.fillStyle = 'white';
 		context.fillRect(0, 0, width, height);
@@ -28,8 +27,7 @@ const sketch = () => {
 		context.translate(x, y);
 		context.strokeStyle = 'black';
 
-		drawSkewedRect({ context });
-		// context.stroke();
+		drawSkewedRect({ context, h: 100, degrees: -45 });
 
 		context.restore();
 	};
