@@ -6,6 +6,7 @@
 const canvasSketch = require('canvas-sketch');
 const math = require('canvas-sketch-util/math');
 const random = require('canvas-sketch-util/random');
+const Color = require('canvas-sketch-util/color');
 const risoColors = require('riso-colors');
 
 const settings = {
@@ -20,11 +21,15 @@ const sketch = ({ context, width, height }) => {
 	const degrees = -30;
 
 	const rects = [];
+
 	const rectColors = [
 		random.pick(risoColors),
 		random.pick(risoColors),
 		random.pick(risoColors),
 	];
+
+	// pick from the entire color set for the bg
+	const bgColor = random.pick(risoColors).hex;
 
 	for (let i = 0; i < num; i++) {
 		x = random.range(0, width);
@@ -39,19 +44,42 @@ const sketch = ({ context, width, height }) => {
 	}
 
 	return ({ context, width, height }) => {
-		context.fillStyle = fill;
+		context.fillStyle = bgColor;
 		context.fillRect(0, 0, width, height);
 
 		rects.forEach(rect => {
 			const { x, y, w, h, fill, stroke } = rect;
+			let shadowColor;
+
 			context.save();
 			context.translate(x, y);
 			context.strokeStyle = stroke;
 			context.fillStyle = fill;
+			context.lineWidth = 10;
 
 			drawSkewedRect({ context, w, h, degrees });
-			context.stroke();
+
+			// convert to HSL and bring a darker version of our
+			// picked color
+			shadowColor = Color.offsetHSL(fill, 0, 0, -20);
+			// bring back alpha value
+			shadowColor.rgba[3] = 0.5;
+
+			// add shadow to ctx
+			context.shadowColor = Color.style(shadowColor.rgba);
+			context.shadowOffsetX = -10;
+			context.shadowOffsetY = 20;
+
 			context.fill();
+
+			// no shadow for strokes
+			context.shadowColor = null;
+			context.stroke();
+
+			// thin outlines around shapes
+			context.lineWidth = 2;
+			context.strokeStyle = 'black';
+			context.stroke();
 
 			context.restore();
 		});
