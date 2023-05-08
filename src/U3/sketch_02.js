@@ -27,7 +27,7 @@ const sketch = () => {
 		context.translate(x, y);
 		context.strokeStyle = 'black';
 
-		drawSkewedRect({ context, h: 100, degrees: -45 });
+		drawSkewedRect({ context, h: h, degrees: -45 });
 
 		context.restore();
 	};
