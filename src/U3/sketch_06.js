@@ -50,7 +50,7 @@ const sketch = ({ context, width, height }) => {
 	// mask
 	const mask = {
 		radius: width * 0.4,
-		sides: 80,
+		sides: 90,
 		x: width * 0.5,
 		y: height * 0.5,
 	};
@@ -134,7 +134,7 @@ const sketch = ({ context, width, height }) => {
 		// polygon outline
 		context.save();
 		context.translate(mask.x, mask.y);
-		context.lineWidth = 80; // 20
+		context.lineWidth = 50; // 20
 
 		drawPolygon({ context, radius: mask.radius - (context.lineWidth * 0.85), sides: mask.sides });
 
