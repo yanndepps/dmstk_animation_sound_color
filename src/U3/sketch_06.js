@@ -2,6 +2,7 @@
  * U3 -> sketch_06 : Skewing
  * Random Seed
  * TODO: sketch_07 -> animate inner shapes
+ * TODO: sketch_08 -> make it scalable for prints
 */
 
 const canvasSketch = require('canvas-sketch');
