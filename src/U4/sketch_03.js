@@ -1,6 +1,6 @@
 /*
- * U4 -> sketch_02 : Curves
- * Cursor Interaction
+ * U4 -> sketch_03 : Curves
+ * Multiple Points
 */
 
 const canvasSketch = require('canvas-sketch');
