@@ -40,7 +40,7 @@ const sketch = ({ width, height }) => {
 	return ({ context, width, height }) => {
 		context.fillStyle = 'black';
 		context.fillRect(0, 0, width, height);
-		// transformation block
+		// TODO: transformation block
 	};
 };
 
