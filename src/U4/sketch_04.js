@@ -28,13 +28,19 @@ const sketch = ({ width, height }) => {
 	const my = (height - gh) * 0.5;
 	// array to store points
 	const points = [];
-	// for all grid cells
-	// define x,y & and push new points
-	// into the array
-	let x, y;
+
+	let x, y, n;
+	let freq = 0.002;
+	let amp = 90;
+
 	for (let i = 0; i < numCells; i++) {
 		x = (i % cols) * cw;
 		y = Math.floor(i / cols) * ch;
+
+		n = random.noise2D(x, y, freq, amp);
+		x += n;
+		y += n;
+
 		points.push(new Point({ x, y }));
 	}
 
