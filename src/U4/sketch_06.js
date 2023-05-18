@@ -1,6 +1,6 @@
 /*
- * U4 -> sketch_05 : Curves
- * Segments
+ * U4 -> sketch_06 : Curves
+ * Animation
 */
 
 const canvasSketch = require('canvas-sketch');
@@ -16,8 +16,8 @@ const settings = {
 
 const sketch = ({ width, height }) => {
 	// num cols & rows in grid
-	const cols = 8; // 12
-	const rows = 72; // 6
+	const cols = 72; // 12
+	const rows = 12; // 6
 	const numCells = cols * rows;
 	// grid width & height
 	const gw = width * 0.8;
@@ -32,12 +32,11 @@ const sketch = ({ width, height }) => {
 	const points = [];
 
 	let x, y, n, lineWidth, color;
-	let freq = 0.002;
+	let freq = 0.0025;
 	let amp = 90;
 
-	// TODO
 	const colors = colormap({
-		colormap: 'magma',
+		colormap: 'salinity',
 		nshades: amp,
 	});
 
@@ -46,8 +45,6 @@ const sketch = ({ width, height }) => {
 		y = Math.floor(i / cols) * ch;
 
 		n = random.noise2D(x, y, freq, amp);
-		x += n;
-		y += n;
 
 		lineWidth = math.mapRange(n, -amp, amp, 0, 5);
 		color = colors[Math.floor(math.mapRange(n, -amp, amp, 0, amp))];
@@ -55,7 +52,7 @@ const sketch = ({ width, height }) => {
 		points.push(new Point({ x, y, lineWidth, color }));
 	}
 
-	return ({ context, width, height }) => {
+	return ({ context, width, height, frame }) => {
 		context.fillStyle = 'black';
 		context.fillRect(0, 0, width, height);
 
@@ -63,8 +60,15 @@ const sketch = ({ width, height }) => {
 		context.translate(mx, my);
 		context.translate(cw * 0.5, ch * 0.5);
 
-		context.strokeStyle = 'red';
-		context.lineWidth = 4;
+		// context.strokeStyle = 'red';
+		// context.lineWidth = 4;
+
+		// upd pos
+		points.forEach(point => {
+			n = random.noise2D(point.ix + frame, point.iy + (frame * 0.6), freq, amp);
+			point.x = point.ix + n;
+			point.y = point.iy + n;
+		});
 
 		let lastx, lasty;
 
@@ -74,8 +78,8 @@ const sketch = ({ width, height }) => {
 				const curr = points[r * cols + c + 0];
 				const next = points[r * cols + c + 1];
 
-				const mx = curr.x + (next.x - curr.x) * 0.5;
-				const my = curr.y + (next.y - curr.y) * 0.5;
+				const mx = curr.x + (next.x - curr.x) * 0.8;
+				const my = curr.y + (next.y - curr.y) * 3.5;
 
 				if (!c) {
 					lastx = curr.x;
@@ -91,18 +95,15 @@ const sketch = ({ width, height }) => {
 
 				context.stroke();
 
-				// lastx = mx;
-				// lasty = my;
-
 				lastx = mx - c / cols * 250;
 				lasty = my - r / rows * 250;
 			}
 		}
 
 		// draw points
-		// points.forEach(point => {
-		// 	point.draw(context);
-		// });
+		points.forEach(point => {
+			point.draw(context);
+		});
 
 		context.restore();
 	};
@@ -116,15 +117,20 @@ class Point {
 		this.y = y;
 		this.lineWidth = lineWidth;
 		this.color = color;
+
+		// store init pos
+		this.ix = x;
+		this.iy = y;
 	}
 
 	draw(context) {
 		context.save();
+		// context.translate(this.ix, this.iy);
 		context.translate(this.x, this.y);
 		context.fillStyle = 'white';
 
 		context.beginPath();
-		context.arc(0, 0, 5, 0, Math.PI * 2);
+		context.arc(0, 0, 2, 0, Math.PI * 2);
 		context.fill();
 
 		context.restore();
