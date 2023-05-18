@@ -16,8 +16,8 @@ const settings = {
 
 const sketch = ({ width, height }) => {
 	// num cols & rows in grid
-	const cols = 12; // 12
-	const rows = 6; // 6
+	const cols = 72; // 12
+	const rows = 8; // 6
 	const numCells = cols * rows;
 	// grid width & height
 	const gw = width * 0.8;
@@ -26,20 +26,20 @@ const sketch = ({ width, height }) => {
 	const cw = gw / cols;
 	const ch = gh / rows;
 	// margins around grid
-	const mx = (width - gw) * 0.5;
-	const my = (height - gh) * 0.5;
+	const mx = (width - gw) * 0.5; // 0.8
+	const my = (height - gh) * 0.5; // 5.5
 	// array to store points
 	const points = [];
 
-	let x, y, n, lineWidth;
+	let x, y, n, lineWidth, color;
 	let freq = 0.002;
 	let amp = 90;
 
 	// TODO
-	// const colors = colormap({
-	// 	colormap: 'magma',
-	// 	nshades: amp,
-	// });
+	const colors = colormap({
+		colormap: 'magma',
+		nshades: amp,
+	});
 
 	for (let i = 0; i < numCells; i++) {
 		x = (i % cols) * cw;
@@ -49,9 +49,10 @@ const sketch = ({ width, height }) => {
 		x += n;
 		y += n;
 
-		lineWidth = math.mapRange(n, -amp, amp, 2, 20);
+		lineWidth = math.mapRange(n, -amp, amp, 0, 5);
+		color = colors[Math.floor(math.mapRange(n, -amp, amp, 0, amp))];
 
-		points.push(new Point({ x, y, lineWidth }));
+		points.push(new Point({ x, y, lineWidth, color }));
 	}
 
 	return ({ context, width, height }) => {
@@ -83,14 +84,18 @@ const sketch = ({ width, height }) => {
 
 				context.beginPath();
 				context.lineWidth = curr.lineWidth;
+				context.strokeStyle = curr.color;
 
 				context.moveTo(lastx, lasty);
 				context.quadraticCurveTo(curr.x, curr.y, mx, my);
 
 				context.stroke();
 
-				lastx = mx;
-				lasty = my;
+				// lastx = mx;
+				// lasty = my;
+
+				lastx = mx - c / cols * 250;
+				lasty = my - r / rows * 250;
 			}
 		}
 
@@ -106,10 +111,11 @@ const sketch = ({ width, height }) => {
 canvasSketch(sketch, settings);
 
 class Point {
-	constructor({ x, y, lineWidth }) {
+	constructor({ x, y, lineWidth, color }) {
 		this.x = x;
 		this.y = y;
 		this.lineWidth = lineWidth;
+		this.color = color;
 	}
 
 	draw(context) {
