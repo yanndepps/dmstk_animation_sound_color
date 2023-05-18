@@ -6,6 +6,7 @@
 const canvasSketch = require('canvas-sketch');
 const random = require('canvas-sketch-util/random');
 const math = require('canvas-sketch-util/math');
+const colormap = require('colormap');
 
 const settings = {
 	dimensions: [1080, 1080],
@@ -33,6 +34,12 @@ const sketch = ({ width, height }) => {
 	let x, y, n, lineWidth;
 	let freq = 0.002;
 	let amp = 90;
+
+	// TODO
+	// const colors = colormap({
+	// 	colormap: 'magma',
+	// 	nshades: amp,
+	// });
 
 	for (let i = 0; i < numCells; i++) {
 		x = (i % cols) * cw;
