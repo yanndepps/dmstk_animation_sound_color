@@ -4,6 +4,7 @@
 */
 
 const canvasSketch = require('canvas-sketch');
+const random = require('canvas-sketch-util/random');
 
 const settings = {
 	dimensions: [1080, 1080],
@@ -40,16 +41,29 @@ const sketch = ({ width, height }) => {
 	return ({ context, width, height }) => {
 		context.fillStyle = 'black';
 		context.fillRect(0, 0, width, height);
-		// transformation block
+
 		context.save();
-		// to top & left margins
 		context.translate(mx, my);
-		// to half of the cell widths & heights
 		context.translate(cw * 0.5, ch * 0.5);
-		// draw pnts
+		context.strokeStyle = 'red';
+		context.lineWidth = 4;
+
+		// draw lines
+		for (let r = 0; r < rows; r++) {
+			context.beginPath();
+			for (let c = 0; c < cols; c++) {
+				const point = points[r * cols + c];
+				if (!c) context.moveTo(point.x, point.y);
+				else context.lineTo(point.x, point.y);
+			}
+			context.stroke();
+		}
+
+		// draw points
 		points.forEach(point => {
 			point.draw(context);
 		});
+
 		context.restore();
 	};
 };
