@@ -40,7 +40,17 @@ const sketch = ({ width, height }) => {
 	return ({ context, width, height }) => {
 		context.fillStyle = 'black';
 		context.fillRect(0, 0, width, height);
-		// TODO: transformation block
+		// transformation block
+		context.save();
+		// to top & left margins
+		context.translate(mx, my);
+		// to half of the cell widths & heights
+		context.translate(cw * 0.5, ch * 0.5);
+		// draw pnts
+		points.forEach(point => {
+			point.draw(context);
+		});
+		context.restore();
 	};
 };
 
