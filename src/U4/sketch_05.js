@@ -1,6 +1,7 @@
 /*
- * U4 -> sketch_04 : Curves
- * Creating a Grid
+ * U4 -> sketch_05 : Curves
+ * Segments
+ * TODO: segments
 */
 
 const canvasSketch = require('canvas-sketch');
