@@ -13,6 +13,7 @@ const settings = {
 
 let audio;
 let audioContext, audioData, sourceNode, analyserNode;
+let manager;
 
 const sketch = () => {
 	return ({ context, width, height }) => {
@@ -43,8 +44,14 @@ const addListeners = () => {
 		// only call if no audio ctx
 		if (!audioContext) createAudio();
 		// play/pause
-		if (audio.paused) audio.play();
-		else audio.pause();
+		// enable sketch manager
+		if (audio.paused) {
+			audio.play();
+			manager.play();
+		} else {
+			audio.pause();
+			manager.pause();
+		}
 	});
 };
 
@@ -81,5 +88,13 @@ const getAverage = (data) => {
 	return sum / data.length;
 };
 
-addListeners();
-canvasSketch(sketch, settings);
+// async sketch manager
+const start = async () => {
+	addListeners();
+	// store canvasSketch ref to the sketch manager
+	manager = await canvasSketch(sketch, settings);
+	// sketch in a pause state
+	manager.pause();
+};
+
+start();
