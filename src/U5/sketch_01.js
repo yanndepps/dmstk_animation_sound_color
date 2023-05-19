@@ -1,7 +1,14 @@
+/*
+ * U5 -> sketch_01 : Sound
+ * ...
+ */
+
 const canvasSketch = require('canvas-sketch');
 
 const settings = {
-	dimensions: [1080, 1080]
+	dimensions: [1080, 1080],
+	context: '2d',
+	animate: false,
 };
 
 const sketch = () => {
