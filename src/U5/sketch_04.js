@@ -4,6 +4,7 @@
  */
 
 const canvasSketch = require('canvas-sketch');
+const math = require('canvas-sketch-util/math');
 
 const settings = {
 	dimensions: [1080, 1080],
@@ -16,6 +17,7 @@ let audioContext, audioData, sourceNode, analyserNode;
 let manager;
 
 const sketch = () => {
+	const bins = [4, 12, 37];
 	return ({ context, width, height }) => {
 		context.fillStyle = 'white';
 		context.fillRect(0, 0, width, height);
@@ -24,18 +26,20 @@ const sketch = () => {
 		if (!audioContext) return;
 		analyserNode.getFloatFrequencyData(audioData);
 
-		// store the average of our data array
-		const avg = getAverage(audioData);
+		for (let i = 0; i < bins.length; i++) {
+			const bin = bins[i];
+			const mapped = math.mapRange(audioData[bin], analyserNode.minDecibels, analyserNode.maxDecibels, 0, 1, true);
+			const radius = mapped * 300;
 
-		// draw a circle using these values
-		context.save();
-		context.translate(width * 0.5, height * 0.5);
-		context.lineWidth = 10;
-		context.beginPath();
-		// make sure avg is not a neg num
-		context.arc(0, 0, Math.abs(avg), 0, Math.PI * 2);
-		context.stroke();
-		context.restore();
+			context.save();
+			context.translate(width * 0.5, height * 0.5);
+			context.lineWidth = 10;
+			context.beginPath();
+			context.arc(0, 0, radius, 0, Math.PI * 2);
+			context.stroke();
+			context.restore();
+		}
+
 	};
 };
 
@@ -67,6 +71,10 @@ const createAudio = () => {
 	sourceNode.connect(audioContext.destination);
 	// analyser node
 	analyserNode = audioContext.createAnalyser();
+	// fft
+	analyserNode.fftSize = 512;
+	// less jumpy animation
+	analyserNode.smoothingTimeConstant = 0.9;
 	// also connect the src node to the analyser node
 	sourceNode.connect(analyserNode);
 
