@@ -12,6 +12,7 @@ const settings = {
 };
 
 const particles = [];
+const cursor = { x: 9999, y: 9999 };
 let elCanvas;
 
 const sketch = ({ width, height, canvas }) => {
@@ -42,14 +43,27 @@ const sketch = ({ width, height, canvas }) => {
 const onMouseDown = (e) => {
 	window.addEventListener('mousemove', onMouseMove);
 	window.addEventListener('mouseup', onMouseUp);
+	// delegate
+	onMouseMove(e);
 };
 
 const onMouseMove = (e) => {
-	// TODO
+	// cursor pos in proportion of the sketch
+	const x = (e.offsetX / elCanvas.offsetWidth) * elCanvas.width;
+	const y = (e.offsetY / elCanvas.offsetHeight) * elCanvas.height;
+
+	cursor.x = x;
+	cursor.y = y;
+
+	console.log(cursor);
 };
 
 const onMouseUp = () => {
-	// TODO
+	window.removeEventListener('mousemove', onMouseMove);
+	window.removeEventListener('mouseup', onMouseUp);
+
+	cursor.x = 9999;
+	cursor.y = 9999;
 };
 
 canvasSketch(sketch, settings);
@@ -77,6 +91,7 @@ class Particle {
 	}
 
 	update() {
+		// distance btwn cursor & particle
 		// apply some force to particles by inc acceleration
 		this.ax += 0.001;
 		// inc velocity by acceleration
