@@ -54,8 +54,6 @@ const onMouseMove = (e) => {
 
 	cursor.x = x;
 	cursor.y = y;
-
-	console.log(cursor);
 };
 
 const onMouseUp = () => {
@@ -88,15 +86,43 @@ class Particle {
 
 		// size
 		this.radius = radius;
+
+		this.minDist = 100;
+		this.pushFactor = 0.02;
+		this.pullFactor = 0.004;
+		this.dampFactor = 0.95;
 	}
 
 	update() {
-		// distance btwn cursor & particle
-		// apply some force to particles by inc acceleration
-		this.ax += 0.001;
+		let dx, dy, dd, disDelta;
+
+		// pull force
+		dx = this.ix - this.x;
+		dy = this.iy - this.y;
+
+		this.ax = dx * this.pullFactor;
+		this.ay = dy * this.pullFactor;
+
+		// push force
+		dx = this.x - cursor.x;
+		dy = this.y - cursor.y;
+		dd = Math.sqrt(dx * dx + dy * dy);
+
+		disDelta = this.minDist - dd;
+
+		if (dd < this.minDist) {
+			// proportional to the inverse of the dist
+			this.ax += (dx / dd) * disDelta * this.pushFactor;
+			this.ay += (dy / dd) * disDelta * this.pushFactor;
+		}
+
 		// inc velocity by acceleration
 		this.vx += this.ax;
 		this.vy += this.ay;
+
+		// dampening
+		this.vx *= this.dampFactor;
+		this.vy *= this.dampFactor;
 
 		// inc position by velocity
 		this.x += this.vx;
