@@ -1,6 +1,7 @@
 /*
  * U5 -> sketch_05 : Sound
  * Arcs variation -> Creating Posters
+ * TODO: scale for prints
  */
 
 const canvasSketch = require('canvas-sketch');

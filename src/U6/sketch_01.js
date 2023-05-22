@@ -1,6 +1,6 @@
 /*
  * U6 -> sketch_01 : Particles
- * TODO
+ * Drawing a Single Particle
  */
 
 const canvasSketch = require('canvas-sketch');
@@ -19,3 +19,11 @@ const sketch = () => {
 };
 
 canvasSketch(sketch, settings);
+
+class Particle {
+	constructor({ x, y, radius = 10 }) {
+		this.x = x;
+		this.y = y;
+		this.radius = radius;
+	}
+}
