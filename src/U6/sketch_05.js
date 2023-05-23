@@ -1,6 +1,6 @@
 /*
  * U6 -> sketch_05 : Particles
- * TODO: Image Data
+ * Image Data
  */
 
 const canvasSketch = require('canvas-sketch');
@@ -101,7 +101,22 @@ const onMouseUp = () => {
 	cursor.y = 9999;
 };
 
-canvasSketch(sketch, settings);
+const loadImage = async (url) => {
+	return new Promise((resolve, reject) => {
+		const img = new Image();
+		img.onload = () => resolve(img);
+		img.onerror = () => reject();
+		img.src = url;
+	});
+};
+
+// TODO
+const start = async () => {
+	imgA = await loadImage('./assets/images/img_01.avif');
+	canvasSketch(sketch, settings);
+};
+
+start();
 
 class Particle {
 	constructor({ x, y, radius = 10 }) {
