@@ -8,6 +8,7 @@ const random = require('canvas-sketch-util/random');
 const math = require('canvas-sketch-util/math');
 const eases = require('eases');
 const colormap = require('colormap');
+const interpolate = require('color-interpolate');
 
 const settings = {
 	dimensions: [1024, 1024],
@@ -23,7 +24,7 @@ const colors = colormap({
 });
 
 let elCanvas;
-let imgA;
+let imgA, imgB;
 
 const sketch = ({ width, height, canvas }) => {
 	let x, y, particle, radius;
@@ -31,17 +32,27 @@ const sketch = ({ width, height, canvas }) => {
 	// new canvas -> read img data
 	const imgACanvas = document.createElement('canvas');
 	const imgAContext = imgACanvas.getContext('2d');
+
+	const imgBCanvas = document.createElement('canvas');
+	const imgBContext = imgBCanvas.getContext('2d');
+
 	imgACanvas.width = imgA.width;
 	imgACanvas.height = imgA.height;
+
+	imgBCanvas.width = imgB.width;
+	imgBCanvas.height = imgB.height;
+
 	imgAContext.drawImage(imgA, 0, 0);
+	imgBContext.drawImage(imgB, 0, 0);
 
 	// get img data
 	const imgAData = imgAContext.getImageData(0, 0, imgA.width, imgA.height).data;
+	const imgBData = imgBContext.getImageData(0, 0, imgB.width, imgB.height).data;
 
 	const numCircles = 30;
 	const gapCircle = 2;
-	const gapDot = 2;
-	let dotRadius = 12;
+	const gapDot = 4;
+	let dotRadius = 6;
 	let cirRadius = 0;
 	const fitRadius = dotRadius;
 
@@ -52,7 +63,7 @@ const sketch = ({ width, height, canvas }) => {
 		const circumference = Math.PI * 2 * cirRadius;
 		const numFit = i ? Math.floor(circumference / (fitRadius * 2 + gapDot)) : 1;
 		const fitSlice = Math.PI * 2 / numFit;
-		let ix, iy, idx, r, g, b, colA;
+		let ix, iy, idx, r, g, b, colA, colB, colMap;
 
 		for (let j = 0; j < numFit; j++) {
 			// angle for each dot
@@ -76,7 +87,14 @@ const sketch = ({ width, height, canvas }) => {
 			// radius = dotRadius;
 			radius = math.mapRange(r, 0, 255, 1, 12);
 
-			particle = new Particle({ x, y, radius, colA });
+			r = imgBData[idx + 0];
+			g = imgBData[idx + 1];
+			b = imgBData[idx + 2];
+			colB = `rgb(${r}, ${g}, ${b})`;
+
+			colMap = interpolate([colA, colB]);
+
+			particle = new Particle({ x, y, radius, colMap });
 			particles.push(particle);
 		}
 
@@ -89,7 +107,8 @@ const sketch = ({ width, height, canvas }) => {
 		context.fillStyle = 'black';
 		context.fillRect(0, 0, width, height);
 
-		context.drawImage(imgACanvas, 0, 0);
+		// context.drawImage(imgACanvas, 0, 0);
+		// context.drawImage(imgBCanvas, 0, 0);
 
 		// sort particles -> big front, small back
 		particles.sort((a, b) => a.scale - b.scale);
@@ -134,16 +153,16 @@ const loadImage = async (url) => {
 	});
 };
 
-// TODO
 const start = async () => {
 	imgA = await loadImage('./assets/images/img_01.avif');
+	imgB = await loadImage('./assets/images/img_02.avif');
 	canvasSketch(sketch, settings);
 };
 
 start();
 
 class Particle {
-	constructor({ x, y, radius = 10, colA }) {
+	constructor({ x, y, radius = 10, colMap }) {
 		// position
 		this.x = x;
 		this.y = y;
@@ -163,7 +182,8 @@ class Particle {
 		this.radius = radius;
 		this.scale = 1.0;
 
-		this.color = colA;
+		this.colMap = colMap;
+		this.color = colMap(0);
 
 		this.minDist = random.range(100, 200);
 		this.pushFactor = random.range(0.01, 0.02);
@@ -173,7 +193,6 @@ class Particle {
 
 	update() {
 		let dx, dy, dd, disDelta;
-		let idxColor;
 
 		// pull force
 		dx = this.ix - this.x;
@@ -186,8 +205,7 @@ class Particle {
 		this.scale = math.mapRange(dd, 0, 200, 1, 5);
 
 		// colors
-		// idxColor = Math.floor(math.mapRange(dd, 0, 200, 0, colors.length - 1, true));
-		// this.color = colors[idxColor];
+		this.color = this.colMap(math.mapRange(dd, 0, 200, 0, 1, true));
 
 		// push force
 		dx = this.x - cursor.x;
