@@ -1,6 +1,6 @@
 /*
  * U6 -> sketch_05 : Particles
- * Image Data
+ * TODO: Image Data
  */
 
 const canvasSketch = require('canvas-sketch');
